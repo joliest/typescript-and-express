@@ -22,10 +22,16 @@ export function controller(routePrefix: string) {
         target.prototype,
         key
       );
+      const middlewares =
+        Reflect.getMetadata(MetadataKeys.middleware, target, key) || [];
 
       // not all key from prototype are not path
       if (path) {
-        router[method](`${routePrefix}${path}`, routeHandlerMethod);
+        router[method](
+          `${routePrefix}${path}`,
+          ...middlewares,
+          routeHandlerMethod
+        );
       }
     }
   };
